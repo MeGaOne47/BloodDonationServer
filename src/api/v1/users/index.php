@@ -2,6 +2,9 @@
 require_once('../../../models/User.php');
 require_once('../../../config/database.php');
 
+// Gọi tệp cors.php để cấu hình CORS
+require_once('../../../config/cors.php');
+
 $userModel = new User($conn);
 
 $request_method = $_SERVER['REQUEST_METHOD'];
