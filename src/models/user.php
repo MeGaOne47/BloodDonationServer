@@ -45,5 +45,24 @@ class User {
         $stmt = $this->conn->prepare("INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)");
         $stmt->execute([$user_id, $role_id]);
     }
+
+    public function getUserByUsername($username) {
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     
+    public function loginUser($email, $password) {
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password'])) {
+            // Mật khẩu đúng, trả về thông tin người dùng
+            return $user;
+        } else {
+            // Sai email hoặc mật khẩu
+            return null;
+        }
+    }
 }

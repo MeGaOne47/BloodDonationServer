@@ -15,33 +15,6 @@ switch ($request_method) {
         $users = $userModel->getAllUsers();
         echo json_encode($users);
         break;
-    case 'POST':
-        // Đăng ký tài khoản mới
-        $data = json_decode(file_get_contents("php://input"));
-        $username = $data->username;
-        $email = $data->email;
-        $password = $data->password;
-    
-        // Kiểm tra xem người dùng có tồn tại hay không
-        $existingUser = $userModel->getUserByUsernameOrEmail($username, $email);
-    
-        if (!$existingUser) {
-            // Người dùng chưa tồn tại, thực hiện đăng ký
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $userId = $userModel->createUser($username, $email, $hashedPassword);
-    
-            // Gán vai trò mặc định cho người dùng mới đăng ký (ví dụ: 'user')
-            $defaultRoleId = 2; // ID của vai trò 'user' trong bảng roles
-            $userModel->assignUserRole($userId, $defaultRoleId);
-    
-            // Trả về thông báo thành công hoặc ID của người dùng mới
-            echo json_encode(["success" => true, "message" => "Registration successful!", "user_id" => $userId]);
-        } else {
-            // Người dùng đã tồn tại
-            http_response_code(400);
-            echo json_encode(["success" => false, "message" => "User already exists."]);
-        }
-        break;        
     case 'PUT':
         // Cập nhật thông tin người dùng
         $data = json_decode(file_get_contents("php://input"));
